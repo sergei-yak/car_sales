@@ -201,6 +201,7 @@ async def scrape_marketplace_cars_async(
     headless: bool = True,
     slow_mo_ms: int = 0,
     save_cookies_to: Optional[str] = None,
+    location_contains: Optional[List[str]] = None,
 ) -> List[Dict]:
     browser = None
     page = None
@@ -228,6 +229,11 @@ async def scrape_marketplace_cars_async(
             else:
                 attempts_without_growth = 0
             await _scroll_once(page)
+
+        # Optional location filtering by substring(s)
+        if location_contains:
+            needles = [s.strip().lower() for s in location_contains if s and s.strip()]
+            collected = [l for l in collected if any(n in l.location_text.lower() for n in needles)]
 
         if save_cookies_to:
             try:
@@ -258,6 +264,7 @@ def scrape_marketplace_cars(
     headless: bool = True,
     slow_mo_ms: int = 0,
     save_cookies_to: Optional[str] = None,
+    location_contains: Optional[List[str]] = None,
 ) -> List[Dict]:
     return asyncio.run(
         scrape_marketplace_cars_async(
@@ -267,5 +274,6 @@ def scrape_marketplace_cars(
             headless=headless,
             slow_mo_ms=slow_mo_ms,
             save_cookies_to=save_cookies_to,
+            location_contains=location_contains,
         )
     )

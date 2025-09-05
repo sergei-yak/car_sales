@@ -22,7 +22,10 @@ pip3 install --break-system-packages -r requirements.txt
 ## Usage
 
 ```bash
-python3 -m scraper.cli --query "Toyota Camry" --max-items 40 --cookies ./cookies.json --out-json results.json --out-csv results.csv --headless
+python3 -m scraper.cli --query "Toyota Camry" --max-items 40 \
+  --cookies ./cookies.json \
+  --location-contains "Dallas, TX,Dallas" \
+  --out-json results.json --out-csv results.csv --headless
 ```
 
 Outputs compact JSON to stdout and optionally writes JSON/CSV files.
@@ -38,6 +41,7 @@ Tips:
 - `title`
 - `price_text`
 - `location_text` (best-effort; may be empty from list view)
+  - You can filter results with `--location-contains`, a comma-separated list of substrings.
 - `image_url`
 - `scraped_at` (UTC ISO8601)
 

@@ -39,8 +39,18 @@ def main() -> None:
     parser.add_argument("--out-json", type=str, default=None, help="Write results to JSON at this path")
     parser.add_argument("--out-csv", type=str, default=None, help="Write results to CSV at this path")
     parser.add_argument("--save-cookies", type=str, default=None, help="Save session cookies to this file after run")
+    parser.add_argument(
+        "--location-contains",
+        type=str,
+        default=None,
+        help="Comma-separated substrings to match in location, e.g. 'Dallas, TX,Dallas,Plano'",
+    )
 
     args = parser.parse_args()
+
+    substrings = None
+    if args.location_contains:
+        substrings = [s.strip() for s in args.location_contains.split(",") if s.strip()]
 
     rows = scrape_marketplace_cars(
         query=args.query,
@@ -49,6 +59,7 @@ def main() -> None:
         headless=bool(args.headless),
         slow_mo_ms=args.slow_mo_ms,
         save_cookies_to=args.save_cookies,
+        location_contains=substrings,
     )
 
     if args.out_json:
